@@ -22,3 +22,13 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Ignore specific folders
+New folder/
+Test/
+demo/
+Week_5_N01581413/
+Lab_6_N01581413/
+
+# Ignore all ZIP files
+*.zip   

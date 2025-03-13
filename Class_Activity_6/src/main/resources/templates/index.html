@@ -1,5 +1,5 @@
   <!DOCTYPE html>
-  <html lang="en">
+  <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -13,7 +13,7 @@
       <table>
         <tr>
           <td>UserName:</td>
-          <td><input name="userName" type="text" required></td>
+          <td><input name="username" type="text" required></td>
         </tr>
         <tr>
           <td>Password:</td>
@@ -26,7 +26,6 @@
       </table>
     </form>
     <br>
-    <!-- Only show the error message when the 'response' is not null -->
     <th:block th:if="${response != null}">
       <p style="color:red;" th:text="${response}"></p>
     </th:block>
