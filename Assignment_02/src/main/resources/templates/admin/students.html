@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Students</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-item {
+            margin-right: 10px;
+        }
+        .success-message {
+            color: #28a745;
+            margin: 15px auto;
+            padding: 10px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .error-message {
+            color: #d9534f;
+            margin: 15px auto;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="navbar-brand" href="#">Admin Portal</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/admin/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/admin/students(adminId=${param.adminId})}">Manage Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/admin/courses(adminId=${param.adminId})}">Manage Courses</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <h2 class="mb-4">Manage Students</h2>
+
+    <!-- Success/Error Messages -->
+    <div class="success-message" th:if="${successMessage != null}" th:text="${successMessage}"></div>
+    <div class="error-message" th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
+
+    <!-- Students Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5>All Students</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Created Date</th>
+                        <th>Modified Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${students.empty}">
+                        <td colspan="7" class="text-center">No students found</td>
+                    </tr>
+                    <tr th:each="student : ${students}" th:unless="${students.empty}">
+                        <td th:text="${student.id}">1</td>
+                        <td th:text="${student.firstName + ' ' + student.lastName}">John Doe</td>
+                        <td th:text="${student.username}">johndoe</td>
+                        <td th:text="${student.email}">john@example.com</td>
+                        <td th:text="${#temporals.format(student.createdDate, 'yyyy-MM-dd')}">2023-01-01</td>
+                        <td th:text="${student.modifiedDate != null ? #temporals.format(student.modifiedDate, 'yyyy-MM-dd') : 'Not Modified'}">2023-01-01</td>
+                        <td>
+                            <a th:href="@{/admin/student/{id}(id=${student.id},adminId=${param.adminId})}" class="btn btn-sm btn-info">View</a>
+                            <form th:action="@{/admin/student/delete}" method="post" class="d-inline">
+                                <input type="hidden" name="studentId" th:value="${student.id}">
+                                <input type="hidden" name="adminId" th:value="${param.adminId}">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
