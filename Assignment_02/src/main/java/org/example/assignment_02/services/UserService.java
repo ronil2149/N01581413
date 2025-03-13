@@ -75,15 +75,13 @@ public class UserService {
             if (optionalExistingUser.isPresent()) {
                 User existingUser = optionalExistingUser.get();
 
-                // Update only specific fields and preserve others
+                // Only update editable fields
                 existingUser.setFirstName(user.getFirstName());
                 existingUser.setLastName(user.getLastName());
                 existingUser.setEmail(user.getEmail());
                 existingUser.setAddress(user.getAddress());
                 existingUser.setDob(user.getDob());
-
-                // Update modification date
-                existingUser.setModifiedDate(LocalDate.now());
+                existingUser.setModifiedDate(LocalDate.now()); // Update modification date
 
                 User updatedUser = userRepository.save(existingUser);
                 logger.info("User updated successfully: {}", updatedUser.getUsername());

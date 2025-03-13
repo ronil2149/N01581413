@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -37,20 +38,22 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String dashboard(@ModelAttribute("loggedInUser") User admin, Model model) {
         if (admin == null || !"ADMIN".equals(admin.getRole())) {
-            logger.warn("Unauthorized access attempt to admin dashboard");
             return "redirect:/";
         }
 
         logger.info("Loading dashboard for admin: {}", admin.getUsername());
         model.addAttribute("admin", admin);
 
-        // Get all students for quick overview
+        // Fetch students and courses
         List<User> students = userService.getAllActiveStudents();
         model.addAttribute("studentCount", students.size());
 
-        // Get all courses
         List<Course> courses = courseService.getAllActiveCourses();
         model.addAttribute("courseCount", courses.size());
+
+        // Fetch enrollments so they stay across all pages
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        model.addAttribute("enrollments", enrollments);
 
         return "admin/dashboard";
     }
@@ -58,7 +61,6 @@ public class AdminController {
     // Manage students
     @GetMapping("/students")
     public String manageStudents(@RequestParam(value = "adminId", required = false) Integer adminId, Model model) {
-        // If adminId is provided, verify admin
         if (adminId != null) {
             User admin = userService.getUserById(adminId);
             if (admin == null || !"ADMIN".equals(admin.getRole())) {
@@ -70,6 +72,10 @@ public class AdminController {
         logger.info("Loading student management page");
         List<User> students = userService.getAllActiveStudents();
         model.addAttribute("students", students);
+
+        // Fetch enrollments so they stay across all pages
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        model.addAttribute("enrollments", enrollments);
 
         return "admin/students";
     }
@@ -99,7 +105,7 @@ public class AdminController {
 
     // Update student
     @PostMapping("/student/update")
-    public String updateStudent(@Valid @ModelAttribute User student, BindingResult bindingResult,
+    public String updateStudent(@Valid @ModelAttribute User updatedStudent, BindingResult bindingResult,
                                 @RequestParam("adminId") int adminId,
                                 Model model, RedirectAttributes redirectAttributes) {
 
@@ -108,22 +114,43 @@ public class AdminController {
             return "redirect:/";
         }
 
+        // Fetch the existing student from the database
+        User existingStudent = userService.getUserById(updatedStudent.getId());
+        if (existingStudent == null) {
+            return "redirect:/admin/students?adminId=" + adminId;
+        }
+
+        // Preserve fields that should NOT be overwritten
+        updatedStudent.setPassword(existingStudent.getPassword()); // Keep the existing password
+        updatedStudent.setRole(existingStudent.getRole());
+        updatedStudent.setUsername(existingStudent.getUsername());
+        updatedStudent.setAccountNonExpired(existingStudent.isAccountNonExpired());
+        updatedStudent.setAccountNonLocked(existingStudent.isAccountNonLocked());
+        updatedStudent.setCredentialsNonExpired(existingStudent.isCredentialsNonExpired());
+        updatedStudent.setEnabled(existingStudent.isEnabled());
+        updatedStudent.setDeleted(existingStudent.isDeleted());
+        updatedStudent.setCreatedDate(existingStudent.getCreatedDate()); // Preserve original creation date
+        updatedStudent.setModifiedDate(LocalDate.now()); // Update modification date
+
+        // If validation errors exist, return to the form
         if (bindingResult.hasErrors()) {
+            logger.error("Validation errors: " + bindingResult.getAllErrors());
             model.addAttribute("admin", admin);
+            model.addAttribute("student", updatedStudent);
             return "admin/student-details";
         }
 
-        logger.info("Admin: {} updating student: {}", admin.getUsername(), student.getUsername());
-        User updatedStudent = userService.updateUser(student);
-
-        if (updatedStudent != null) {
+        // Perform the update
+        User savedStudent = userService.updateUser(updatedStudent);
+        if (savedStudent != null) {
             redirectAttributes.addFlashAttribute("successMessage", "Student updated successfully!");
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update student.");
         }
 
-        return "redirect:/admin/student/" + student.getId() + "?adminId=" + adminId;
+        return "redirect:/admin/student/" + updatedStudent.getId() + "?adminId=" + adminId;
     }
+
 
     // Delete (soft) student
     @PostMapping("/student/delete")
@@ -152,7 +179,6 @@ public class AdminController {
     // Manage courses - using shared template
     @GetMapping("/courses")
     public String manageCourses(@RequestParam(value = "adminId", required = false) Integer adminId, Model model) {
-        // If adminId is provided, verify admin
         if (adminId == null) {
             return "redirect:/";
         }
@@ -164,15 +190,16 @@ public class AdminController {
 
         logger.info("Loading course management page for admin: {}", admin.getUsername());
         List<Course> courses = courseService.getAllActiveCourses();
-        logger.info("Found {} active courses for admin view", courses.size());
-
-        // Add attributes needed for the shared template
         model.addAttribute("courses", courses);
-        model.addAttribute("user", admin);  // Use "user" instead of "admin" for the shared template
-        model.addAttribute("isAdmin", true); // Flag to indicate this is admin view
-        model.addAttribute("newCourse", new Course()); // For new course form
+        model.addAttribute("user", admin);
+        model.addAttribute("isAdmin", true);
+        model.addAttribute("newCourse", new Course());
 
-        return "shared/courses"; // Use the shared courses template
+        // Fetch enrollments so they stay across all pages
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        model.addAttribute("enrollments", enrollments);
+
+        return "shared/courses";
     }
 
     // Add new course
@@ -285,9 +312,25 @@ public class AdminController {
     public String manageCourses(@RequestParam("adminId") int adminId, Model model) {
         List<Course> courses = courseService.getAllActiveCourses();
         model.addAttribute("courses", courses);
-        model.addAttribute("adminId", adminId);  // Preserve adminId
+        model.addAttribute("adminId", adminId);
         return "admin/courses";
     }
+
+    @GetMapping("/enrollments")
+    public String viewEnrollments(@RequestParam("adminId") int adminId, Model model) {
+        User admin = userService.getUserById(adminId);
+        if (admin == null || !"ADMIN".equals(admin.getRole())) {
+            return "redirect:/";
+        }
+
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        model.addAttribute("enrollments", enrollments);
+        model.addAttribute("admin", admin);
+
+        return "admin/enrollments";
+    }
+
+
 
 
 

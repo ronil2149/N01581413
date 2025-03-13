@@ -120,6 +120,8 @@ public class EnrollmentService {
     }
 
     public List<Enrollment> getAllEnrollments() {
+        logger.info("Fetching all enrollments");
         return enrollmentRepository.findAll();
     }
+
 }
