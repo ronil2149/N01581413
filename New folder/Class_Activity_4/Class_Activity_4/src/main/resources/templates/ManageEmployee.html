@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Management</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <img th:src="@{/images/logo.jpg}" alt="Company Logo" class="logo">
+    <h1>Employee Management System</h1>
+</header>
+
+<div class="container">
+    <div class="actions-container">
+        <a href="/showAddEmployeeForm" class="btn">Add Employee</a>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form action="/search" method="get" class="search-form">
+                <input type="number" name="id" placeholder="Enter Employee ID" class="search-input">
+                <button type="submit" class="btn">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Result Message -->
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+    <!-- Search Result -->
+    <div th:if="${searchResult}" class="search-result">
+        <h3>Search Result:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td th:text="${searchResult.id}"></td>
+                <td th:text="${searchResult.firstName}"></td>
+                <td th:text="${searchResult.lastName}"></td>
+                <td th:text="${searchResult.emailId}"></td>
+                <td>
+                    <a th:href="@{/showUpdateForm/{id}(id=${searchResult.id})}" class="btn btn-small">Update</a>
+                    <a th:href="@{/deleteEmployee/{id}(id=${searchResult.id})}" class="btn btn-small btn-danger">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- All Employees Table -->
+    <h2>All Employees</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${employeeList}">
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.firstName}"></td>
+            <td th:text="${employee.lastName}"></td>
+            <td th:text="${employee.emailId}"></td>
+            <td>
+                <a th:href="@{/showUpdateForm/{id}(id=${employee.id})}" class="btn btn-small">Update</a>
+                <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}" class="btn btn-small btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>&copy; 2025 Employee Management System</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+package org.example.class_activity_3;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ClassActivity3Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ClassActivity3Application.class, args);
+	}
+
+}
