@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Employee</title>
+</head>
+<body>
+<h1>Edit Employee Details</h1>
+<form th:action="@{/employees/update/{id}(id=${employee.id})}" method="post">
+    <!-- Hidden field to simulate the PUT method -->
+    <input type="hidden" name="_method" value="POST"/>
+
+    <input type="hidden" th:value="${employee.id}" name="id"/>
+
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" th:value="${employee.firstName}" required><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" th:value="${employee.lastName}" required><br>
+
+    <label for="emailId">Email ID:</label>
+    <input type="email" id="emailId" name="emailId" th:value="${employee.emailId}" required><br>
+
+    <input type="submit" value="Update Employee">
+</form>
+<a href="/employees">Cancel</a>
+</body>
+</html>
