@@ -121,7 +121,7 @@ public class AdminController {
         }
 
         // Preserve fields that should NOT be overwritten
-        updatedStudent.setPassword(existingStudent.getPassword()); // Keep the existing password
+        updatedStudent.setPassword(existingStudent.getPassword());
         updatedStudent.setRole(existingStudent.getRole());
         updatedStudent.setUsername(existingStudent.getUsername());
         updatedStudent.setAccountNonExpired(existingStudent.isAccountNonExpired());
@@ -129,7 +129,7 @@ public class AdminController {
         updatedStudent.setCredentialsNonExpired(existingStudent.isCredentialsNonExpired());
         updatedStudent.setEnabled(existingStudent.isEnabled());
         updatedStudent.setDeleted(existingStudent.isDeleted());
-        updatedStudent.setCreatedDate(existingStudent.getCreatedDate()); // Preserve original creation date
+        updatedStudent.setCreatedDate(existingStudent.getCreatedDate());
         updatedStudent.setModifiedDate(LocalDate.now()); // Update modification date
 
         // If validation errors exist, return to the form
@@ -280,7 +280,6 @@ public class AdminController {
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to update course.");
         }
-
         return "redirect:/admin/course/" + course.getId() + "?adminId=" + adminId;
     }
 
@@ -302,9 +301,7 @@ public class AdminController {
 
         logger.info("Admin: {} deleting course: {}", admin.getUsername(), course.getCourseCode());
         courseService.softDeleteCourse(courseId);
-
         redirectAttributes.addFlashAttribute("successMessage", "Course deleted successfully!");
-
         return "redirect:/admin/courses?adminId=" + adminId;
     }
 
@@ -326,7 +323,6 @@ public class AdminController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         model.addAttribute("enrollments", enrollments);
         model.addAttribute("admin", admin);
-
         return "admin/enrollments";
     }
 
