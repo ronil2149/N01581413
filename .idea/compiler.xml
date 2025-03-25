@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Week_5_N01581413" />
+        <module name="Class_Activity_3" />
+        <module name="Class_Activity_4" />
+      </profile>
+      <profile name="Annotation profile for N01581413_Ghoghari_Test3_IMS" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="N01581413_Ghoghari_Assignment2" />
+        <module name="Class_Activity_8" />
+        <module name="N01581413_Ghoghari_Test3_IMS" />
+        <module name="Test" />
+        <module name="Lab_6_N01581413" />
+        <module name="Assignment_01" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Assignment_01" options="-parameters" />
+      <module name="Class_Activity_3" options="-parameters" />
+      <module name="Class_Activity_4" options="-parameters" />
+      <module name="Class_Activity_8" options="-parameters" />
+      <module name="Lab_6_N01581413" options="-parameters" />
+      <module name="N01581413_Ghoghari_Assignment2" options="-parameters" />
+      <module name="N01581413_Ghoghari_Test3_IMS" options="-parameters" />
+      <module name="Test" options="-parameters" />
+      <module name="Week_5_N01581413" options="-parameters" />
+    </option>
+  </component>
+</project>

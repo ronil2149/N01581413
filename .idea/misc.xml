@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Assignment_01/pom.xml" />
+        <option value="$PROJECT_DIR$/Assignment_02/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_3/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_4/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_5/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_6/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_7/pom.xml" />
+        <option value="$PROJECT_DIR$/Class_Activity_8/pom.xml" />
+        <option value="$PROJECT_DIR$/N01581413_Ghoghari_Test3_IMS/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

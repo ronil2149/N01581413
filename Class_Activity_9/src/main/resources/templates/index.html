@@ -1,0 +1,35 @@
+  <!DOCTYPE html>
+  <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+  </head>
+  <body>
+  <h1>Welcome to Java Beans & Bytes!</h1>
+  <p th:text="${message}"></p>
+  <div align="center">
+    <h3>Enter Login Detail</h3>
+    <form action="#" method="post" th:action="@{/users/login}">
+      <table>
+        <tr>
+          <td>UserName:</td>
+          <td><input name="username" type="text" required></td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td><input name="password" type="password" required></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><input type="submit" value="Login"></td>
+        </tr>
+      </table>
+    </form>
+    <br>
+    <th:block th:if="${response != null}">
+      <p style="color:red;" th:text="${response}"></p>
+    </th:block>
+    <h3>Click here to register: <a th:href="@{/users/add}">Create an Account</a></h3>
+  </div>
+  </body>
+  </html>
