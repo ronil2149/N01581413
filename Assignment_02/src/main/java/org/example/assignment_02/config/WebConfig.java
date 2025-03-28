@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Add simple view controller for error page
         registry.addViewController("/error").setViewName("error");
     }
 }

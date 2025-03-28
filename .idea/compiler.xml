@@ -11,18 +11,18 @@
         <module name="Class_Activity_3" />
         <module name="Class_Activity_4" />
       </profile>
-      <profile name="Annotation profile for Class_Activity_9" enabled="true">
+      <profile name="Annotation profile for Assignment_03" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="N01581413_Ghoghari_Assignment2" />
         <module name="Class_Activity_8" />
         <module name="N01581413_Ghoghari_Test3_IMS" />
         <module name="Test" />
+        <module name="Assignment_03" />
         <module name="Class_Activity_9" />
         <module name="Lab_6_N01581413" />
         <module name="Assignment_01" />
@@ -32,6 +32,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Assignment_01" options="-parameters" />
+      <module name="Assignment_03" options="-parameters" />
       <module name="Class_Activity_3" options="-parameters" />
       <module name="Class_Activity_4" options="-parameters" />
       <module name="Class_Activity_8" options="-parameters" />
