@@ -7,12 +7,14 @@ import org.example.assignment_02.models.User;
 import org.example.assignment_02.services.CourseService;
 import org.example.assignment_02.services.EnrollmentService;
 import org.example.assignment_02.services.UserService;
+import org.example.assignment_02.validation.ValidationGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -105,42 +107,42 @@ public class AdminController {
 
     // Update student
     @PostMapping("/student/update")
-    public String updateStudent(@Valid @ModelAttribute User updatedStudent, BindingResult bindingResult,
+    public String updateStudent(@Validated(ValidationGroups.OnUpdate.class) @ModelAttribute("student") User updatedStudent,
+                                BindingResult bindingResult,
                                 @RequestParam("adminId") int adminId,
-                                Model model, RedirectAttributes redirectAttributes) {
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
 
         User admin = userService.getUserById(adminId);
         if (admin == null || !"ADMIN".equals(admin.getRole())) {
             return "redirect:/";
         }
 
-        // Fetch the existing student from the database
         User existingStudent = userService.getUserById(updatedStudent.getId());
         if (existingStudent == null) {
             return "redirect:/admin/students?adminId=" + adminId;
         }
 
-        // Preserve fields that should NOT be overwritten
+        // Preserve sensitive fields
         updatedStudent.setPassword(existingStudent.getPassword());
         updatedStudent.setRole(existingStudent.getRole());
         updatedStudent.setUsername(existingStudent.getUsername());
+        updatedStudent.setDob(existingStudent.getDob());
         updatedStudent.setAccountNonExpired(existingStudent.isAccountNonExpired());
         updatedStudent.setAccountNonLocked(existingStudent.isAccountNonLocked());
         updatedStudent.setCredentialsNonExpired(existingStudent.isCredentialsNonExpired());
         updatedStudent.setEnabled(existingStudent.isEnabled());
         updatedStudent.setDeleted(existingStudent.isDeleted());
         updatedStudent.setCreatedDate(existingStudent.getCreatedDate());
-        updatedStudent.setModifiedDate(LocalDate.now()); // Update modification date
+        updatedStudent.setModifiedDate(LocalDate.now());
 
-        // If validation errors exist, return to the form
         if (bindingResult.hasErrors()) {
-            logger.error("Validation errors: " + bindingResult.getAllErrors());
+            logger.warn("Validation errors in admin update: {}", bindingResult.getAllErrors());
             model.addAttribute("admin", admin);
             model.addAttribute("student", updatedStudent);
-            return "admin/student-details";
+            return "admin/student-details"; // Make sure this matches your Thymeleaf page
         }
 
-        // Perform the update
         User savedStudent = userService.updateUser(updatedStudent);
         if (savedStudent != null) {
             redirectAttributes.addFlashAttribute("successMessage", "Student updated successfully!");
@@ -150,6 +152,7 @@ public class AdminController {
 
         return "redirect:/admin/student/" + updatedStudent.getId() + "?adminId=" + adminId;
     }
+
 
 
     // Delete (soft) student

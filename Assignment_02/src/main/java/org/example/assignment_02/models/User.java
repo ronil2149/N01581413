@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.assignment_02.validation.ValidationGroups;
+
 import java.time.LocalDate;
 
 @Data
@@ -36,7 +38,7 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password is required", groups = ValidationGroups.OnCreate.class)
     @Size(min = 5, message = "Password must be at least 5 characters")
     private String password;
 

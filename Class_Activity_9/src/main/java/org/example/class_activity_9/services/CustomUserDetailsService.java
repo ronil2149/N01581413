@@ -1,9 +1,11 @@
 package org.example.class_activity_9.services;
 
+
+import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.example.class_activity_9.models.User;
 import org.example.class_activity_9.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class CustomUserDetailsService implements org.example.class_activity_9.services.UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 

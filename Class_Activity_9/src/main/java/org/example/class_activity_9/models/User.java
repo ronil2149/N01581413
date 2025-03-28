@@ -40,6 +40,9 @@ public class User {
     @NotBlank(message = "Password is required")
     @Size(min = 5, message = "Password must be at least 5 characters")
     private String password;
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     private LocalDate dob;
     private LocalDate createdDate;
     private LocalDate modifiedDate;

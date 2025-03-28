@@ -15,23 +15,20 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class UserRestController {
 
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private UserService userService;
 
     @Autowired
-    public UserRestController(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
+    private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         User foundUser = userService.userLogin(user.getUsername(), user.getPassword());
         if (foundUser != null) {
-            String token = jwtUtil.generateToken(user.getUsername());
+            String token = jwtUtil.generateToken(foundUser.getUsername());
             return ResponseEntity.ok(new AuthResponse(token, foundUser.getUsername()));
         }
-        return ResponseEntity.status(401).body("Invalid Credentials");
+        return ResponseEntity.status(401).body("Invalid username or password");
     }
 
     @PostMapping("/register")
@@ -45,49 +42,48 @@ public class UserRestController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.addUser(user);
-        return ResponseEntity.ok(savedUser);
+        return ResponseEntity.ok(userService.addUser(user));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         User updatedUser = userService.updateUserById(id, userDetails);
         return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        boolean exists = userService.deleteUserById(id);
-        return exists ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
-    }
-}
-
-// Simple response class for login/register
-class AuthResponse {
-    private String token;
-    private String username;
-
-    public AuthResponse(String token, String username) {
-        this.token = token;
-        this.username = username;
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        boolean deleted = userService.deleteUserById(id);
+        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    public String getToken() {
-        return token;
-    }
+    // Auth response class
+    static class AuthResponse {
+        private String token;
+        private String username;
 
-    public String getUsername() {
-        return username;
+        public AuthResponse(String token, String username) {
+            this.token = token;
+            this.username = username;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public String getUsername() {
+            return username;
+        }
     }
 }

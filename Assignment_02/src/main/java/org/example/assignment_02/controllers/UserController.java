@@ -62,35 +62,37 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(@RequestParam String username, @RequestParam String password,
-                            Model model, RedirectAttributes redirectAttributes) {
+    public String userLogin(@RequestParam String username,
+                            @RequestParam String password,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
         try {
             logger.info("Received request to login for user: {}", username);
             User user = userService.userLogin(username, password);
 
-            if (!Objects.isNull(user)) {
+            if (user != null) {
                 logger.info("User {}, logged in successfully", username);
 
-                // Add user information to redirect attributes
                 redirectAttributes.addFlashAttribute("loggedInUser", user);
 
-                // Redirect based on role
                 if ("ADMIN".equals(user.getRole())) {
-                    return "redirect:/admin/dashboard";
+                    return "redirect:/admin/dashboard?adminId=" + user.getId();
                 } else {
-                    return "redirect:/student/dashboard";
+                    return "redirect:/student/dashboard?id=" + user.getId();
                 }
             } else {
                 logger.info("Authentication failed for the user: {}", username);
                 model.addAttribute("response", "Invalid Username/Password");
                 return "index";
             }
+
         } catch (Exception e) {
             logger.error("Error during login: {}", e.getMessage());
             model.addAttribute("response", "An error occurred during login. Please try again.");
             return "index";
         }
     }
+
 
     @GetMapping("/logout")
     public String logout() {

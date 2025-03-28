@@ -70,7 +70,7 @@ public class StudentController {
         return "student/profile";
     }
 
-    // Update profile - Fixed version
+    // Update profile
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute User updatedUser,
                                 BindingResult bindingResult,
@@ -96,6 +96,7 @@ public class StudentController {
         updatedUser.setPassword(existingUser.getPassword());
         updatedUser.setRole(existingUser.getRole());
         updatedUser.setUsername(existingUser.getUsername());
+        updatedUser.setDob(existingUser.getDob());
         updatedUser.setAccountNonExpired(existingUser.isAccountNonExpired());
         updatedUser.setAccountNonLocked(existingUser.isAccountNonLocked());
         updatedUser.setCredentialsNonExpired(existingUser.isCredentialsNonExpired());
